@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -12,12 +11,6 @@ interface DateSelectorProps {
 
 export function DateSelector({ selectedDate }: DateSelectorProps) {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  // Only render calendar after component mounts on client
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
@@ -35,18 +28,12 @@ export function DateSelector({ selectedDate }: DateSelectorProps) {
         <CardTitle>Select Date</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center">
-        {mounted ? (
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={handleDateSelect}
-            className="rounded-md border"
-          />
-        ) : (
-          <div className="h-[350px] flex items-center justify-center">
-            <p className="text-sm text-muted-foreground">Loading calendar...</p>
-          </div>
-        )}
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={handleDateSelect}
+          className="rounded-md border"
+        />
       </CardContent>
     </Card>
   );
