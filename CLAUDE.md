@@ -2,6 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## CRITICAL: Always Check Documentation First
+
+**BEFORE generating any code, you MUST:**
+
+1. **Check the `/docs` directory** for relevant documentation files
+2. **Read and follow** the patterns, examples, and guidelines in those docs
+3. **Reference the official documentation** for the technology you're implementing
+
+The `/docs` directory contains authoritative reference documentation for all major technologies and patterns used in this project. Always consult these files to ensure you're using the correct APIs, patterns, and best practices.
+
+**Example workflow:**
+- Implementing auth? → Read `/docs/clerk.md` first
+- Working with Next.js? → Read `/docs/nextjs.md` first
+- Setting up database? → Read `/docs/neon.md` first
+- Adding styling? → Read `/docs/tailwind.md` first
+
+**Never guess at API usage or patterns when documentation is available.**
+
 ## Project Overview
 
 This is a Next.js 16 application for a lifting diary course, bootstrapped with `create-next-app`. It uses the App Router architecture (not Pages Router) with React 19 and TypeScript.
@@ -39,7 +57,9 @@ src/
   app/                    # App Router directory
     layout.tsx           # Root layout with fonts and metadata
     page.tsx             # Home page
+    dashboard/           # Dashboard page
     globals.css          # Global Tailwind styles
+  proxy.ts               # Clerk middleware (Next.js 16)
 public/                  # Static assets
 ```
 
@@ -65,8 +85,9 @@ public/                  # Static assets
 
 This project uses Clerk for authentication with the App Router pattern:
 
-- **Proxy/Middleware**: `src/proxy.ts` uses `clerkMiddleware()` from `@clerk/nextjs/server`
-  - Note: Next.js 16 uses `proxy.ts` instead of `middleware.ts` (Next.js ≤15 used `middleware.ts`)
+- **Middleware**:
+  - `src/proxy.ts` - Clerk middleware implementation using `clerkMiddleware()` from `@clerk/nextjs/server`
+  - Note: Next.js 16 requires `proxy.ts` (not `middleware.ts`). Clerk may show detection warnings but functionality works correctly
 - **Provider**: `<ClerkProvider>` wraps the app in `src/app/layout.tsx`
 - **Components**: Uses `<SignInButton>`, `<SignUpButton>`, `<UserButton>`, `<SignedIn>`, `<SignedOut>`
 - **Environment Variables**: Stored in `.env.local` (excluded from git)
@@ -101,4 +122,4 @@ export default async function ServerComponent() {
 - Uses Tailwind v4 which has a different setup than v3 (PostCSS-based)
 - Font loading uses next/font with Geist fonts configured in layout.tsx
 - Clerk authentication uses `clerkMiddleware()` NOT deprecated `authMiddleware()`
-- **Next.js 16 uses `proxy.ts`** for middleware (not `middleware.ts` from Next.js ≤15)
+- **Only `proxy.ts` is used**: Next.js 16 requires `proxy.ts` and will error if both `proxy.ts` and `middleware.ts` exist. Clerk may show detection warnings in the console, but the middleware functions correctly.
