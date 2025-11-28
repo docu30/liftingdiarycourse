@@ -13,6 +13,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The `/docs` directory contains authoritative reference documentation for all major technologies and patterns used in this project. Always consult these files to ensure you're using the correct APIs, patterns, and best practices.
 
 **Example workflow:**
+- Fetching data? → Read `/docs/data-fetching.md` first
+- Mutating data? → Read `/docs/data-mutations.md` first
+- Building UI components? → Read `/docs/ui.md` first
 - Implementing auth? → Read `/docs/clerk.md` first
 - Working with Next.js? → Read `/docs/nextjs.md` first
 - Setting up database? → Read `/docs/neon.md` first
