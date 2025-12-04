@@ -8,6 +8,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -59,14 +60,10 @@ export default function RootLayout({
                 <ThemeToggle />
                 <SignedOut>
                   <SignInButton mode="modal">
-                    <button className="px-4 py-2 border rounded-md bg-background text-foreground hover:bg-accent cursor-pointer">
-                      Sign In
-                    </button>
+                    <Button variant="outline">Sign In</Button>
                   </SignInButton>
                   <SignUpButton mode="modal">
-                    <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 cursor-pointer">
-                      Sign Up
-                    </button>
+                    <Button>Sign Up</Button>
                   </SignUpButton>
                 </SignedOut>
                 <SignedIn>
