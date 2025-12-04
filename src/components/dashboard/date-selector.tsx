@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -10,14 +10,18 @@ interface DateSelectorProps {
   selectedDate: Date;
 }
 
+// Hook to detect client-side rendering (React-recommended pattern)
+function useIsClient() {
+  return useSyncExternalStore(
+    () => () => {}, // subscribe (no-op)
+    () => true, // getSnapshot (client)
+    () => false // getServerSnapshot (server)
+  );
+}
+
 export function DateSelector({ selectedDate }: DateSelectorProps) {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  // Only render calendar after component mounts on client
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isClient = useIsClient();
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
@@ -35,7 +39,7 @@ export function DateSelector({ selectedDate }: DateSelectorProps) {
         <CardTitle>Select Date</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center">
-        {mounted ? (
+        {isClient ? (
           <Calendar
             mode="single"
             selected={selectedDate}

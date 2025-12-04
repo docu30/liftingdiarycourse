@@ -97,3 +97,66 @@ export async function getWorkouts(userId: string, limit?: number) {
 
   return userWorkouts;
 }
+
+/**
+ * Create a new workout
+ * @param userId - The user's ID from Clerk
+ * @param data - The workout data to insert
+ * @returns The created workout
+ */
+export async function createWorkout(
+  userId: string,
+  data: {
+    startedAt: Date;
+    notes?: string;
+    templateId?: number;
+  }
+) {
+  const [workout] = await db
+    .insert(workouts)
+    .values({
+      userId,
+      startedAt: data.startedAt,
+      notes: data.notes,
+      templateId: data.templateId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .returning();
+
+  return workout;
+}
+
+/**
+ * Update an existing workout (with ownership check)
+ * @param workoutId - The workout ID to update
+ * @param userId - The user's ID from Clerk
+ * @param data - The workout data to update
+ * @returns The updated workout, or undefined if not found or unauthorized
+ */
+export async function updateWorkout(
+  workoutId: number,
+  userId: string,
+  data: {
+    startedAt?: Date;
+    completedAt?: Date;
+    duration?: number;
+    notes?: string;
+  }
+) {
+  const [workout] = await db
+    .update(workouts)
+    .set({
+      ...data,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(workouts.id, workoutId),
+        eq(workouts.userId, userId) // Ownership check
+      )
+    )
+    .returning();
+
+  return workout;
+}
