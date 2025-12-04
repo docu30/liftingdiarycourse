@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 
@@ -64,65 +65,71 @@ export function WorkoutList({ workouts, selectedDate }: WorkoutListProps) {
               : null;
 
             return (
-              <Card key={workout.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-xl">
-                        {workout.completedAt ? "Workout" : "Workout (In Progress)"}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {workoutTime}
-                        {durationMinutes && ` • ${durationMinutes} minutes`}
-                        {` • ${totalExercises} exercise${totalExercises !== 1 ? "s" : ""}`}
-                        {` • ${totalSets} set${totalSets !== 1 ? "s" : ""}`}
-                      </p>
+              <Link
+                key={workout.id}
+                href={`/dashboard/workout/${workout.id}`}
+                className="block"
+              >
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-xl">
+                          {workout.completedAt ? "Workout" : "Workout (In Progress)"}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {workoutTime}
+                          {durationMinutes && ` • ${durationMinutes} minutes`}
+                          {` • ${totalExercises} exercise${totalExercises !== 1 ? "s" : ""}`}
+                          {` • ${totalSets} set${totalSets !== 1 ? "s" : ""}`}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  {workout.notes && (
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {workout.notes}
-                    </p>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {workout.workoutExercises.map((workoutExercise) => {
-                      // Filter out warmup sets for the summary
-                      const workingSets = workoutExercise.sets.filter(
-                        (set) => !set.isWarmup
-                      );
+                    {workout.notes && (
+                      <p className="text-sm text-muted-foreground mt-2">
+                        {workout.notes}
+                      </p>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {workout.workoutExercises.map((workoutExercise) => {
+                        // Filter out warmup sets for the summary
+                        const workingSets = workoutExercise.sets.filter(
+                          (set) => !set.isWarmup
+                        );
 
-                      return (
-                        <div
-                          key={workoutExercise.id}
-                          className="flex items-center justify-between p-3 bg-muted/50 rounded-md"
-                        >
-                          <div className="flex-1">
-                            <p className="font-medium">
-                              {workoutExercise.exercise.name}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {workoutExercise.sets.length} set
-                              {workoutExercise.sets.length !== 1 ? "s" : ""}
-                              {workingSets.length > 0 && (
-                                <>
-                                  {" × "}
-                                  {workingSets.map((set) => set.reps).join(", ")}
-                                  {" reps"}
-                                  {workingSets[0]?.weight && (
-                                    <> @ {workingSets[0].weight} lbs</>
-                                  )}
-                                </>
-                              )}
-                            </p>
+                        return (
+                          <div
+                            key={workoutExercise.id}
+                            className="flex items-center justify-between p-3 bg-muted/50 rounded-md"
+                          >
+                            <div className="flex-1">
+                              <p className="font-medium">
+                                {workoutExercise.exercise.name}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {workoutExercise.sets.length} set
+                                {workoutExercise.sets.length !== 1 ? "s" : ""}
+                                {workingSets.length > 0 && (
+                                  <>
+                                    {" × "}
+                                    {workingSets.map((set) => set.reps).join(", ")}
+                                    {" reps"}
+                                    {workingSets[0]?.weight && (
+                                      <> @ {workingSets[0].weight} lbs</>
+                                    )}
+                                  </>
+                                )}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })
         ) : (
