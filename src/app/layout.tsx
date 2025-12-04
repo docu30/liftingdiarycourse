@@ -41,9 +41,14 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{
               __html: `
                 try {
-                  const theme = localStorage.getItem('theme') || 'dark';
+                  const theme = localStorage.getItem('theme') || 'system';
                   if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
+                  } else if (theme === 'system') {
+                    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    if (systemTheme === 'dark') {
+                      document.documentElement.classList.add('dark');
+                    }
                   }
                 } catch (e) {}
               `,
