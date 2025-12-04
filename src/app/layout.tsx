@@ -10,6 +10,8 @@ import {
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,27 +35,44 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                try {
+                  const theme = localStorage.getItem('theme') || 'dark';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              `,
+            }}
+          />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <header className="flex items-center justify-between p-4 border-b">
-            <div className="text-lg font-semibold">Lifting Diary Course</div>
-            <div className="flex gap-3 items-center">
-              <SignedOut>
-                <SignInButton mode="modal">
-                  <Button variant="outline">Sign In</Button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button>Sign Up</Button>
-                </SignUpButton>
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </div>
-          </header>
-          {children}
+          <ThemeProvider>
+            <header className="flex items-center justify-between p-4 border-b">
+              <div className="text-lg font-semibold">Lifting Diary Course</div>
+              <div className="flex gap-3 items-center">
+                <ThemeToggle />
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button variant="outline">Sign In</Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button>Sign Up</Button>
+                  </SignUpButton>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+              </div>
+            </header>
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
