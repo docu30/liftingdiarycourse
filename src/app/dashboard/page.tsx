@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { format } from "date-fns";
 import { getWorkoutsForDate } from "@/data/workouts";
 import { DateSelector } from "@/components/dashboard/date-selector";
@@ -13,10 +12,11 @@ interface DashboardPageProps {
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
-  // Get authenticated user
+  // Get authenticated user (middleware ensures userId exists)
   const { userId } = await auth();
   if (!userId) {
-    redirect("/sign-in");
+    // This should never happen due to middleware protection
+    throw new Error("Unauthorized");
   }
 
   // Get date from search params or default to today

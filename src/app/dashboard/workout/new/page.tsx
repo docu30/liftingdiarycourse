@@ -1,11 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { WorkoutForm } from "./workout-form";
 
 export default async function NewWorkoutPage() {
+  // Get authenticated user (middleware ensures userId exists)
   const { userId } = await auth();
   if (!userId) {
-    redirect("/sign-in");
+    // This should never happen due to middleware protection
+    throw new Error("Unauthorized");
   }
 
   return (
