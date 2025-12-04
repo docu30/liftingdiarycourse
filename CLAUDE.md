@@ -18,6 +18,7 @@ The `/docs` directory contains authoritative reference documentation for all maj
 - Building UI components? → Read `/docs/ui.md` first
 - Implementing auth? → Read `/docs/clerk.md` first
 - Working with Next.js? → Read `/docs/nextjs.md` first
+- Setting up routes or navigation? → Read `/docs/routing.md` first
 - Setting up database? → Read `/docs/neon.md` first
 - Adding styling? → Read `/docs/tailwind.md` first
 
